@@ -1,0 +1,8 @@
+//Wrench
+Wrench/Flesh	"sounds/Wrench/WrenchHit2.ogg"
+Wrench/Wall	"sounds/Wrench/WrenchHit.ogg"
+
+$random Wrench/swing {Wrench/SW1 Wrench/SW2 Wrench/SW3}
+Wrench/SW1 Sounds/Wrench/WrenchSwing1.wav
+Wrench/SW2 Sounds/Wrench/WrenchSwing2.wav
+Wrench/SW3 Sounds/Wrench/WrenchSwing3.wav
