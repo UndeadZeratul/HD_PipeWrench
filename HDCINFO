@@ -1,0 +1,5 @@
+// Weapon Spawn Pools
+addSpawnTableSingleEntry => { "tableName": "ChainsawReplaces", "name": "HDPipeWrench", "weight": "0.2", "persists": "true" }
+
+// Merchant Store Entries
+newMerchantStoreItem => { "type": "weapon", "category": "Slogstin", "item": "HDPipeWrench", "icon": "WRNPA0", "displayName": "Pipe Wrench", "basePrice": "80", "flavorText": "Give 'em a good THWACK!" }
