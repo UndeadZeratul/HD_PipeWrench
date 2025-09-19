@@ -1,5 +1,6 @@
 # Description
-This Addon adds a Pipe Wrench to [Hideous Destructor](https://codeberg.org/mc776/HideousDestructor). 
+This Addon adds a Pipe Wrench to [Hideous Destructor](https://codeberg.org/mc776/HideousDestructor).  
+_Requires [HDCoreLib](https://github.com/HDest-Community/hdest-core-lib), made by the community._
 
 ![Base Profile Screenshot 2025 04 10 - 16 06 29 22](https://github.com/user-attachments/assets/22ec9704-d0b0-489e-83ad-779303a56ed4)
 
