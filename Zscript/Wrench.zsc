@@ -52,6 +52,12 @@ class HDPipeWrench : HDCoreBaseMeleeWeapon {
 		inventory.pickupmessage "You got the Pipe Wrench! Let them see stars!";
 		tag "Pipe Wrench";
 		hdweapon.refid HDLD_WRENCH;
+		
+		damageType                          'bashing';
+		meleeRange                          60.0;
+		HDCoreBaseMeleeWeapon.swingHMult    1.5;
+		HDCoreBaseMeleeWeapon.swingVMult    0.1;
+		HDCoreBaseMeleeWeapon.attackFlags   HDCMW_DO_HEADSHOT|HDCMW_DO_PUFF|HDCMW_DO_WINDOWBUST|HDCMW_RECOIL_ATTACKEE|HDCMW_ZERK_BUFF;
 	}
 
 	override double weaponbulk() { return 60; }
@@ -71,10 +77,6 @@ class HDPipeWrench : HDCoreBaseMeleeWeapon {
 		;
 	}
 
-	override double getWeaponAttackFlags() {
-		return HDCMW_DO_HEADSHOT|HDCMW_DO_PUFF|HDCMW_DO_WINDOWBUST|HDCMW_RECOIL_ATTACKEE|HDCMW_ZERK_BUFF;
-	}
-
 	override double getWeaponAttackHeight() {
 		return owner.height - 12;
 	}
@@ -83,45 +85,17 @@ class HDPipeWrench : HDCoreBaseMeleeWeapon {
 		return random(30, 40);
 	}
 
-	override double getWeaponRange() {
-		return 60.0;
+	override double getWeaponHeadShotDamageBonus() {
+		return frandom(2.3, 2.6);
 	}
 
-    override double getWeaponHeadShotDamageBonus() {
-        return frandom(2.3, 2.6);
-    }
-
-    override int getWeaponHeadShotStun(int dmg) {
-        return 185;
-    }
-
-	override bool getWeaponDominantSwing(double pyaw, bool leftHanded) {
-		return false;
+	override int getWeaponHeadShotStun(int dmg) {
+		return 185;
 	}
-
-    override double getWeaponSwingHorzBonus() {
-        return 1.5;
-    }
-
-    override double getWeaponSwingVertBonus() {
-        return 0.1;
-    }
-
-    override double getWeaponSwingDamageBonus(double deltaAngle, double deltaPitch) {
-        return abs(deltaAngle);
-    }
 
 	override string getWeaponPuff() {
 		return "HDWrenchPuff";
 	}
-
-	// override void doWeaponHitRecoil(Actor attackee, double deltaAngle, double deltaPitch) {
-	// 	double iyaw = player.cmd.yaw * (65535.0 / 360.0);
-	// 	if (abs(iyaw) > 0.5) attackee.A_SetAngle(attackee.angle - iyaw * 100, SPF_INTERPOLATE);
-
-	// 	double ipitch = player.cmd.pitch * (65535.0 / 360.0);
-	// 	if (abs(ipitch) > (0.5 * 65535 / 360)) attackee.A_SetPitch(attackee.angle + ipitch * 100, SPF_INTERPOLATE);
-	// }
 
 	override void doWindowBust(FLineTraceData atkLine, double dmg) {
 		DoorDestroyer.checkDirtyWindowBreak(atkLine.hitLine, dmg * 0.2, atkLine.hitLocation);
@@ -161,17 +135,17 @@ class HDPipeWrench : HDCoreBaseMeleeWeapon {
 			#### A 0 A_JumpIf(HDPlayerPawn(self).stunned > 0, "nope");
 		swingstart:
 			#### A 0 A_JumpIf(invoker.zerk, "zerkswingstart");
-	//		WRNH A 0 A_StartSound("weapons/pocket",CHAN_6);
+			// WRNH A 0 A_StartSound("weapons/pocket",CHAN_6);
 			WRNS ABCD 2;
 			#### # 0 A_WeaponBusy;
 			goto holdswing;
 		zerkswingstart:
-	//		WRNH A 0 A_StartSound("weapons/pocket",CHAN_6);
+			// WRNH A 0 A_StartSound("weapons/pocket",CHAN_6);
 			WRNS ABCD 1;
 			#### # 0 A_WeaponBusy;
 			goto holdswing;
 		holdswing:
-			WRNS D 1; //A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH);
+			WRNS D 1; // A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH);
 			#### # 0 A_JumpIf(pressingreload(),"SwingWithdraw");
 			TNT1 A 0 A_ReFire("holdswing");
 			goto swingwind;
@@ -197,11 +171,11 @@ class HDPipeWrench : HDCoreBaseMeleeWeapon {
 			}
 			WRNS LMN 1;
 			TNT1 A 4;
-			//#### A 0 A_JumpIf(pressingaltfire(),"altfire");
-	//		TNT1 AAAAAA 1 A_JumpIf(pressingaltfire(),"swingverti");
-			#### A 0 A_JumpIf(pressingfire(), "swingbackhard");
-	//		#### A 0 A_JumpIf(pressingaltfire(),"HoriSwingHard");
-	//		TNT1 A 0 A_ReFire("startfire");
+			// #### A 0 A_JumpIf(pressingaltfire(),"altfire");
+			// TNT1 AAAAAA 1 A_JumpIf(pressingaltfire(),"swingverti");
+			#### A 0 A_JumpIf(pressingFire(), "swingbackhard");
+			// #### A 0 A_JumpIf(pressingaltfire(),"HoriSwingHard");
+			// TNT1 A 0 A_ReFire("startfire");
 			TNT1 A 0 A_WeaponBusy;
 			goto recoverswing;
 			
@@ -217,19 +191,19 @@ class HDPipeWrench : HDCoreBaseMeleeWeapon {
 			}
 			WRNB DEF 1;
 			TNT1 A 10;
-			//#### A 0 A_JumpIf(pressingaltfire(),"altfire");
-	//		TNT1 AAAAAA 1 A_JumpIf(pressingaltfire(),"swingverti");
-			#### A 0 A_JumpIf(pressingfire(), "swinghard");
-	//		#### A 0 A_JumpIf(pressingaltfire(),"HoriSwingHard");
-	//		TNT1 A 0 A_ReFire("startfire");
+			// #### A 0 A_JumpIf(pressingaltfire(),"altfire");
+			// TNT1 AAAAAA 1 A_JumpIf(pressingaltfire(),"swingverti");
+			#### A 0 A_JumpIf(pressingFire(), "swinghard");
+			// #### A 0 A_JumpIf(pressingaltfire(),"HoriSwingHard");
+			// TNT1 A 0 A_ReFire("startfire");
 			TNT1 A 0 A_WeaponBusy;
 			goto recoverswing;
 			
 		recoverswing:
 			WRNH DCBA 2;
 			#### A 0 A_JumpIf(pressingaltfire(), "nope");
-			#### A 0 A_JumpIf(pressingfiremode(), "nope");
-			#### A 0 A_JumpIf(pressingfire(), "swingstart");
+			#### A 0 A_JumpIf(pressingFiremode(), "nope");
+			#### A 0 A_JumpIf(pressingFire(), "swingstart");
 			goto ready;
 			
 		SwingWithdraw:
@@ -251,11 +225,11 @@ class HDPipeWrench : HDCoreBaseMeleeWeapon {
 			}
 			WRNS LMN 1;
 			TNT1 A 2;
-			//#### A 0 A_JumpIf(pressingaltfire(),"altfire");
-	//		TNT1 AAAAAA 1 A_JumpIf(pressingaltfire(),"swingverti");
-			#### A 0 A_JumpIf(pressingfire(), "zerkswingbackhard");
-	//		#### A 0 A_JumpIf(pressingaltfire(),"HoriSwingHard");
-	//		TNT1 A 0 A_ReFire("startfire");
+			// #### A 0 A_JumpIf(pressingaltfire(),"altfire");
+			// TNT1 AAAAAA 1 A_JumpIf(pressingaltfire(),"swingverti");
+			#### A 0 A_JumpIf(pressingFire(), "zerkswingbackhard");
+			// #### A 0 A_JumpIf(pressingaltfire(),"HoriSwingHard");
+			// TNT1 A 0 A_ReFire("startfire");
 			TNT1 A 0 A_WeaponBusy;
 			goto recoverswing;
 			
@@ -270,11 +244,11 @@ class HDPipeWrench : HDCoreBaseMeleeWeapon {
 			}
 			WRNB DEF 1;
 			TNT1 A 2;
-			//#### A 0 A_JumpIf(pressingaltfire(),"altfire");
-	//		TNT1 AAAAAA 1 A_JumpIf(pressingaltfire(),"swingverti");
-			#### A 0 A_JumpIf(pressingfire(),"zerkswinghard");
-	//		#### A 0 A_JumpIf(pressingaltfire(),"HoriSwingHard");
-	//		TNT1 A 0 A_ReFire("startfire");
+			// #### A 0 A_JumpIf(pressingaltfire(),"altfire");
+			// TNT1 AAAAAA 1 A_JumpIf(pressingaltfire(),"swingverti");
+			#### A 0 A_JumpIf(pressingFire(),"zerkswinghard");
+			// #### A 0 A_JumpIf(pressingaltfire(),"HoriSwingHard");
+			// TNT1 A 0 A_ReFire("startfire");
 			TNT1 A 0 A_WeaponBusy;
 			TNT1 A 3;
 			goto recoverswing;
@@ -295,15 +269,15 @@ class HDPipeWrench : HDCoreBaseMeleeWeapon {
 			}
 			#### # 1 A_Recoil(-8);
 			WRNS ABCD 2;
-			#### # 0  A_JumpIf(pressingfire(), "swingwind");
+			#### # 0  A_JumpIf(pressingFire(), "swingwind");
 			goto SwingWithdraw;
 		
 		hitcheckvertical:
-			TNT1 A 1 A_MeleeWeaponAttack(22);
+			TNT1 A 1 A_MeleeWeaponAttack(HDCMW_ATTACK_DOWN, dmg: 22);
 		stop;
 		
 		hitcheckzerkvertical:
-			TNT1 A 1 A_MeleeWeaponAttack(invoker.flicked ? 340 : 300);
+			TNT1 A 1 A_MeleeWeaponAttack(HDCMW_ATTACK_DOWN, dmg: invoker.flicked ? 340 : 300);
 		stop;
 
 		firemode:
