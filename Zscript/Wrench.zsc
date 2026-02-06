@@ -258,12 +258,7 @@ class HDPipeWrench : HDCoreBaseMeleeWeapon {
 			#### # 1 A_CheckFloor("lunge");
 			goto nope;
 		lunge:
-			#### # 0 A_Lunge(
-				min(HDPlayerPawn(self).overloaded * 0.6, 4.0) - 4.0,
-				fatigueLimit: 30,
-				fatigueIncr: 5,
-				abortState: 'hold'
-			);
+			#### # 0 A_Lunge(min(HDPlayerPawn(self).overloaded * 0.6, 4.0) - 4.0, fatigueIncr: 5, abortState: 'hold');
 			#### # 1 {
 				if (invoker.zerk) A_Recoil(-random(12, 24));
 			}
